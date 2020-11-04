@@ -1,0 +1,67 @@
+11/04/20
+Working on RPi4 4gB
+
+forked https://github.com/jbentham/zerowi
+
+git clone https://github.com/develone/zerowi.git
+
+Tasks
+
+    Translating the command functions - I have made a small start on this
+
+    Translating the CRC functions
+
+    Routing the appropriate pins (I am usung a 3B) including activating the WIFI module
+
+    Loading the firmware
+
+    Translating the io_ctrl commands
+
+    Activating the oscillator and other requirements
+
+    Connecting the interrupt
+
+Milestones
+
+    Actually talking to the chip
+
+    Loading the firmware
+
+    Doing a scan
+
+    Making a non-secure connection
+
+    Making a secure connection
+
+    Actually passing some data
+
+    Integrating it into the TCP/IP infrastructure
+
+    Cracking out the champagne
+cd sdk
+
+make clean
+
+arm-none-eabi-gcc -mfloat-abi=hard -mfpu=vfp -march=armv6zk -mtune=arm1176jzf-s -Og -g CPU_start.S -c
+arm-none-eabi-gcc -mfloat-abi=hard -mfpu=vfp -march=armv6zk -mtune=arm1176jzf-s -Og -g CPU_init.c -c
+arm-none-eabi-gcc -mfloat-abi=hard -mfpu=vfp -march=armv6zk -mtune=arm1176jzf-s -Og -g CPU_init_util.S -c
+arm-none-eabi-ar -r libCPU.a CPU_init.o CPU_init_util.o
+arm-none-eabi-ar: creating libCPU.a
+
+make
+ 
+mkdir -p ultibo/zero-bins/join
+
+mkdir -p ultibo/zero-bins/scan
+
+mkdir -p ultibo/zero-bins/sdk-libs
+
+cp sdk/*.a ultibo/zero-bins/sdk-libs
+
+arm-none-eabi-gcc -specs=./sdk/Alpha.specs -mfloat-abi=hard -mfpu=vfp -march=armv6zk -mtune=arm1176jzf-s -g3 -ggdb -Wall -Wl,-T./sdk/link.ld -L./sdk -I./whd -Wl,-umalloc -fpack-struct=1 -o zerowi.elf srce/zjoin.c srce/zw_sdio.c srce/zw_ioctl.c srce/zw_gpio.c
+
+mv zerowi.elf ultibo/zero-bins/join/
+
+arm-none-eabi-gcc -specs=./sdk/Alpha.specs -mfloat-abi=hard -mfpu=vfp -march=armv6zk -mtune=arm1176jzf-s -g3 -ggdb -Wall -Wl,-T./sdk/link.ld -L./sdk -I./whd -Wl,-umalloc -fpack-struct=1 -o zerowi.elf srce/zscan.c srce/zw_sdio.c srce/zw_ioctl.c srce/zw_gpio.c
+
+mv zerowi.elf ultibo/zero-bins/scan/
