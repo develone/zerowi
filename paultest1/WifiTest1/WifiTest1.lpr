@@ -2,7 +2,7 @@ program WifiTest1;
 
 {$mode objfpc}{$H+}
 {$hints off}
-{$linklib wifi}
+
 { Raspberry Pi Zero Application                                                }
 {  Add your program code below, add additional units to the "uses" section if  }
 {  required and create new units by selecting File, New Unit from the menu.    }
@@ -22,12 +22,14 @@ uses
   SysCalls,
   Ultibo
   { Add additional units here };
-
+{$linklib wifi}
 var
   Console1 : TWindowHandle;
 
-function main : integer; cdecl; external;
-
+ procedure scanit; cdecl; external 'libwifi' name 'scanit';
+ procedure joinit; cdecl; external 'libwifi' name 'joinit';
+//function scanit : integer; cdecl; external libwifi' name scanit;
+//function joinit : integer; cdecl; external libwifi' name joinit;
 procedure Log (s : string);
 begin
   ConsoleWindowWriteLn (Console1, s);
@@ -43,7 +45,8 @@ begin
   Log ('WIFI Demo #1.');
   WaitForSDDrive;
   Log ('SD Drive Ready.');
-  Main;
+  scanit();
+  joinit();
   ThreadHalt (0);
 end.
 
