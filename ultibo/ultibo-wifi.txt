@@ -1,3 +1,8 @@
+arm-none-eabi-gcc -O2 -mabi=aapcs -marm -march=armv6 -mfpu=vfp -mfloat-abi=hard -Iwhd -D__DYNAMIC_REENT__ -c srce/*.c
+arm-none-eabi-ar rcs libwifi.a *.o
+mv libwifi.a paultest1/WifiTest1
+arm-none-eabi-objdump -d libwifi.a >  wifilib.txt
+
 11/04/20
 Working on RPi4 4gB
 
