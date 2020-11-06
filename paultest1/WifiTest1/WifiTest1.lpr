@@ -20,14 +20,17 @@ uses
   Classes,
   Console,
   SysCalls,
-  Ultibo
+  Ultibo,
+  logging
   { Add additional units here };
-{$linklib wifi}
+{$linklib wifiscan}
+{$linklib wifijoin}
 var
   Console1 : TWindowHandle;
+  MyPLoggingDevice : ^TLoggingDevice;
 
- procedure scanit; cdecl; external 'libwifi' name 'scanit';
- procedure joinit; cdecl; external 'libwifi' name 'joinit';
+ procedure test_scan; cdecl; external 'libwifiscan' name 'test_scan';
+ procedure test_wifi; cdecl; external 'libwifijoin' name 'test_wifi';
 //function scanit : integer; cdecl; external libwifi' name scanit;
 //function joinit : integer; cdecl; external libwifi' name joinit;
 procedure Log (s : string);
@@ -42,11 +45,15 @@ end;
 
 begin
   Console1 := ConsoleWindowCreate (ConsoleDeviceGetDefault, CONSOLE_POSITION_FULL, true);
-  Log ('WIFI Demo #1.');
+  LoggingDeviceSetTarget(LoggingDeviceFindByType(LOGGING_TYPE_FILE),'c:\wifi.log');
+ LoggingDeviceSetDefault(LoggingDeviceFindByType(LOGGING_TYPE_FILE));
+ MyPLoggingDevice:=LoggingDeviceGetDefault;
+ LoggingDeviceRedirectOutput(MyPLoggingDevice);
+  //Log ('WIFI Demo #1.');
   WaitForSDDrive;
-  Log ('SD Drive Ready.');
-  scanit();
-  joinit();
+  //Log ('SD Drive Ready.');
+  //test_scan();
+  test_wifi();
   ThreadHalt (0);
 end.
 
