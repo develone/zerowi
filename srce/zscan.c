@@ -128,7 +128,7 @@ int write_nvram(void);
 void disp_bytes(uint8_t *addr, int len);
 void sd_setup(void);
 
-int main(void)
+int test_scan(void)
 {
     int ticks=0, ledon=0, n;
     uint32_t val=0;
